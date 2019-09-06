@@ -16,16 +16,15 @@ using namespace std;
 bool hasDifferentDate(string dataValue, int row);
 bool hasUniqueTime(string dataValue);
 bool isValidFloatData(string dataValue);
-void printArray(DrillingRecordArray* array, int elements);
+void printArray(DrillingRecordArray* array);
 
-int main(/*int argc, char *argv[]*/)
+int main(int argc, char *argv[])
 {
 	// Setting cin with the file stream as buffer.
 
 	// Alternative way to redirect cin to file
-	/*ifstream inFile(argv[1]);
-	cin.rdbuf(inFile.rdbuf());*/
-
+	ifstream inFile(argv[1]);
+	cin.rdbuf(inFile.rdbuf());
 
 	// Declare array for records to store them
 	DrillingRecordArray* drillData = new DrillingRecordArray;
@@ -43,12 +42,16 @@ int main(/*int argc, char *argv[]*/)
 		//Increment row.
 		row++;
 
+		// For every line exists a record.
+		DrillingRecord* recordPtr = new DrillingRecord;
+
 		// Open stream to dataLine.
 		stringstream dataLine(line);
 		string dataValue = "";
 
 		// Loop through each individual column.
 		bool skipRow = false;
+		//bool addData = false;
 		int column = 0;
 		while (getline(dataLine, dataValue, ','))
 		{
@@ -97,29 +100,30 @@ int main(/*int argc, char *argv[]*/)
 				continue;
 			}
 
+			if (column < 3)
+			{
+				//cout << "String Added";
+				recordPtr->addString(dataValue);
+				//cout << drillData->get(0).getString(0) << " : DATA\n";
+			}
+			else
+			{
+				recordPtr->addNum(stod(dataValue));
+			}
+
 			// Reset data Value for loop
 			dataValue = "";
 		}
-		/*
-		// Save all valid lines and increment validLines
-		if (skipRow != true)
-		{
-			for (int i = 0; i < (int)line.size(); i++)
-			{
-				if (line.at(i) == ',')
-				{
-					line.at(i) = ';';
-				}
-			}
-			drilling Record new 
-			drillData->add(record);
 
-			validLines++;
+		if (skipRow != true) 
+		{
+			drillData->add(*recordPtr);
 		}
-		// Reset line for loop
-		line = "";*/  //need to add way to create record
+
+		// Need to output data
+
+		column = 0;
 	}
-	printArray(drillData, validLines);
 
 	delete drillData;
 	return 0;
@@ -191,31 +195,4 @@ bool isValidFloatData(string line)
 		column++;
 	}
 	return isValid;
-}
-
-// Print the array in reverse order
-void printArray(DrillingRecordArray* array, int elements)
-{
-	int numElements = elements;
-	while (numElements > 0)
-	{
-		string line = "";
-		DrillingRecord recordToDisplay = array->get(elements); // Access Data Record
-		for (int j = 0; j < 18; j++)
-		{
-			if (j < 2)
-			{
-				cout << recordToDisplay.getString(j);
-			}
-			else if (j < 17)
-			{
-				cout << fixed << setprecision(2) << recordToDisplay.nums[j - 2] << ";";
-			}
-			else if (j == 17)
-			{
-				cout << fixed << setprecision(2) << recordToDisplay.nums[j - 2] << "\n";
-			}
-		}
-		numElements--;
-	}
 }

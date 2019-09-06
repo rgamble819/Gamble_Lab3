@@ -3,17 +3,20 @@
 
 using namespace std;
 
+// Default constructor
 DrillingRecordArray::DrillingRecordArray()
 {
 	data = new DrillingRecord[DEFAULT_ARRAY_CAPACITY];
 }
 
+// Overloaded constructor
 DrillingRecordArray::DrillingRecordArray(unsigned int capacity)
 {
 	this->capacity = capacity;
 	data = new DrillingRecord[DEFAULT_ARRAY_CAPACITY];
 }
 
+// Destructor
 DrillingRecordArray::~DrillingRecordArray()
 {
 	delete[] this->data;
@@ -23,17 +26,31 @@ DrillingRecordArray::~DrillingRecordArray()
 // Add record to the array doubling if neccessary
 void DrillingRecordArray::add(DrillingRecord record)
 {
-	// Create new drilling record
-	DrillingRecord* newRecord = new DrillingRecord;
-
 	// Double if the array has reached the capacity
 	int arrIndex = 0;
 	if (this->capacity == this->size)
 	{
-		this->capacity = (2 * this->capacity);
+
+		DrillingRecord* old = this->data;
+
+		this->capacity = 2 * this->capacity;
 		DrillingRecord* copiedRecords = new DrillingRecord[this->capacity];
 
-		while (arrIndex < this->size)
+
+		while (arrIndex < (int)this->size) 
+
+		{
+		//	cout << old[arrIndex] << "\n";
+			copiedRecords[arrIndex] = old[arrIndex];
+		//	cout << copiedRecords[arrIndex] << "\n";
+			arrIndex++;
+		}
+
+		delete[] old;
+		this->data = copiedRecords;
+
+		/* // T
+		while (arrIndex < this->getSize())
 		{
 			copiedRecords[arrIndex] = this->data[arrIndex]; // copy data
 			arrIndex++;
@@ -41,13 +58,22 @@ void DrillingRecordArray::add(DrillingRecord record)
 
 		// Clean up memory
 		delete[] this->data;
-		this->data = copiedRecords;
+		this->data = copiedRecords;ODO FIX DOUBLING
+		// Create new drilling record
+		DrillingRecord* newRecord = new DrillingRecord;
 
-		this->data[arrIndex] = *newRecord; // Assign location of new record in array
+		this->capacity = (2 * this->capacity);
+		DrillingRecord* copiedRecords = new DrillingRecord[this->capacity];
+
+
+		this->size++;
+		this->data[arrIndex] = *newRecord; // Assign location of new record in array*/
 	}
 	else
 	{
-		this->data[this->size + 1] = *newRecord; // Assign location of new record in array
+		//cout << "ADDED:"<< record.getString(0)<<" displated \n";
+		this->data[this->size] = record; // Assign location of new record in array
+		this->size++;
 	}
 }
 
@@ -63,6 +89,7 @@ DrillingRecord DrillingRecordArray::get(unsigned int index)
 	// Copy Numbers
 	for (int i = 0; i < MAX_NUMS; i++)
 	{
+		//cout << "Datatocopy: " << oldRecord.getNum(i) << "\n";
 		newRecord->addNum(oldRecord.getNum(i));
 	}
 
