@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include <set>
+#include <vector>
 
 #include"DrillingRecordArray.h"
 #include"DrillingRecord.h"
@@ -16,7 +17,6 @@ using namespace std;
 bool hasDifferentDate(string dataValue, int row);
 bool hasUniqueTime(string dataValue);
 bool isValidFloatData(string dataValue);
-void printArray(DrillingRecordArray* array);
 
 int main(int argc, char *argv[])
 {
@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
 	string line = "";
 	getline(cin, line);
 	line = "";
+
+	vector<DrillingRecord> drillList;
 
 	// Loop through each row in the CSV.
 	int row = 0;
@@ -118,12 +120,18 @@ int main(int argc, char *argv[])
 		if (skipRow != true) 
 		{
 			drillData->add(*recordPtr);
+			drillList.push_back(*recordPtr);
 		}
-
-		// Need to output data
 
 		column = 0;
 	}
+
+	int outputIndex = drillList.size();
+	while (outputIndex > 0)
+	{
+		cout << drillList.at(--outputIndex);
+	}
+
 
 	delete drillData;
 	return 0;
